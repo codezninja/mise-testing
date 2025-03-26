@@ -1,0 +1,36 @@
+name: Setup Mise Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  setup-mise-in-container-using-actions:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/super-linter/super-linter:v7.3.0
+    steps:
+      - uses: jdx/mise-action@v2.1.11
+        with:
+          version: 2025.3.7
+          install: true
+          cache: true
+          experimental: false
+          log_level: debug
+
+  setup-mise-in-container-using-curl:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/super-linter/super-linter:v7.3.0
+    steps:
+      - name: Setup mise
+        shell: bash
+        run: |
+          curl https://mise.run | sh
+          {
+            echo "$HOME/.local/bin"
+            echo "$HOME/.local/share/mise/bin"
+            echo "$HOME/.local/share/mise/shims"
+          } >> "$GITHUB_PATH"
